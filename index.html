@@ -46,7 +46,6 @@
 			var ctrl_pt_mesh_selected = null;
             var lattice_lines = [];
             var lattice_line_material = new THREE.LineBasicMaterial( { color: 0x4d4dff } );
-
             // Evaluated points
             var eval_pt_spans = new THREE.Vector3( 16, 16, 16 );
             var eval_pt_counts = new THREE.Vector3(
@@ -56,10 +55,8 @@
             var eval_pts_geom = new THREE.Geometry();
             var eval_pts_mesh;
             var show_eval_pts_checked = false;
-
             var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2();
-
             // Create new object by parameters
             var createSomething = function( klass, args )
             {
@@ -70,7 +67,6 @@
                 F.prototype = klass.prototype;
                 return new F( klass, args );
             };
-
             // Models
             var modelLibrary = [
                 { type: 'BoxGeometry', args: [ 200, 200, 200, 2, 2, 2 ] },
@@ -92,12 +88,10 @@
                         curveSegments: 1
                     }]},
             ];
-
             var loader_font = new THREE.FontLoader();
             loader_font.load( 'threejs/helvetiker_regular.typeface.js', function ( font ) {
                 modelLibrary[ 8 ].args[ 1 ].font = font;
             } );
-
             var loader_walt = new THREE.JSONLoader();
             loader_walt.load( 'threejs/WaltHeadLo.js', function ( geometry ) {
                 modelLibrary.push({type: 'WaltHead', args: [ ], meshScale: 4 });
@@ -106,25 +100,21 @@
                 };
                 updateUserOptions()
             });
-
-            var loader_suzanne = new THREE.JSONLoader();
-            loader_suzanne.load( 'threejs/Suzanne.js', function ( geometry ) {
-                modelLibrary.push({type: 'Suzanne', args: [ ], scale: 100, meshScale:1.5 });
-                THREE.Suzanne = function() {
+		var loader_walt = new THREE.JSONLoader();
+            loader_walt.load( 'threejs/Tongue.js', function ( geometry ) {
+                modelLibrary.push({type: 'Tongue', args: [ ], scale: 100000, meshScale:50000});
+                THREE.Tongue = function() {
                     return geometry.clone();
                 };
                 updateUserOptions()
-            } );
-
+            });
             // start scene
             init();
             animate();
-
             function init()
             {
                 container = document.createElement( 'div' );
                 document.body.appendChild( container );
-
                 // User options
                 user_options = document.createElement( 'div' );
                 user_options.style.position = 'absolute';
@@ -133,18 +123,14 @@
                 user_options.style.width = '100%';
                 user_options.style.textAlign = 'left';
                 container.appendChild( user_options );
-
                 // Camera
                 camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
                 camera.position.z = 500;
-
                 scene = new THREE.Scene();
-
                 // Light
                 var light = new THREE.PointLight( 0xffffff, 1.5 );
                 light.position.set( 1000, 1000, 2000 );
                 scene.add( light );
-
                 // Renderer
                 renderer = new THREE.WebGLRenderer( { antialias: true } );
                 renderer.setClearColor( 0xf0f0f0 );
@@ -153,36 +139,28 @@
                 container.appendChild( renderer.domElement );
                 renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
-
                 // Orbit controls
                 orbit_ctrl = new THREE.OrbitControls( camera, renderer.domElement );
                 orbit_ctrl.damping = 0.2;
                 orbit_ctrl.addEventListener( 'change', render );
-
                 // Transform control (a triad)
                 trfm_ctrl = new THREE.TransformControls( camera, renderer.domElement );
                 trfm_ctrl.addEventListener( 'change', render );
                 scene.add( trfm_ctrl );
-
                 trfm_ctrl.addEventListener( 'objectChange', function( e ) {
                     updateLattice();
                     deform();
                 } );
-
                 window.addEventListener( 'resize', onWindowResize, false );
-
                 createEvalPtsMesh();
                 addModel();
             }
-
             function onWindowResize()
             {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
-
                 renderer.setSize( window.innerWidth, window.innerHeight );
             }
-
 			function onDocumentMouseMove( event )
             {
 				event.preventDefault();
@@ -201,7 +179,6 @@
 					container.style.cursor = 'auto';
 				}
 			}
-
 			function onDocumentMouseDown( event )
             {
 				event.preventDefault();
@@ -230,7 +207,6 @@
                     orbit_ctrl.enabled = true;
                 }
 			}
-
             function animate()
             {
                 requestAnimationFrame( animate );
@@ -238,13 +214,11 @@
                 trfm_ctrl.update();
                 render();                
             }
-
             function render()
             {
                 eval_pts_mesh.visible = show_eval_pts.checked;
                 renderer.render( scene, camera );
             }
-
             function nextSubdivisionLevel( step )
             {
                 var old_level = subd_level;
@@ -255,7 +229,6 @@
                 if( subd_level != old_level )
                     addModel();
             }
-
             function nextModel()
             {
                 model_index++;
@@ -263,17 +236,14 @@
                     model_index = 0;
                 addModel();
             }
-
             function switchModel( index ) 
             {
                 model_index = index;
                 addModel();
             }
-
             function updateUserOptions()
             {
                 var dropdown = '<select id="dropdown" onchange="switchModel( this.value )">';
-
                 for(  i = 0; i < modelLibrary.length; i++ )
                 {
                     dropdown += '<option value="' + i + '"';
@@ -305,7 +275,6 @@
                     '<label for="show_eval_pts">Show evaluated points (red dots)</label>'
                     ;
             }
-
             function addModel()
             {
                 if( smooth_mesh )
@@ -313,51 +282,37 @@
                     scene.remove( group );
                     scene.remove( smooth_mesh );
                 }
-
                 var subd_modifier = new THREE.SubdivisionModifier( subd_level );
                 var model = modelLibrary[ model_index ];
                 orig_geom = createSomething( THREE[ model.type ], model.args );
-
                 // Scale geometry.
                 if( model.scale )
                     orig_geom.scale( model.scale, model.scale, model.scale );
-
                 // Cloning original geometry for debuging
                 smooth_geom = orig_geom.clone();
-
                 // Merge duplicate vertices.
                 smooth_geom.mergeVertices();
                 smooth_geom.computeFaceNormals();
                 smooth_geom.computeVertexNormals();
-
                 subd_modifier.modify( smooth_geom );
-
                 updateUserOptions();
-
                 var faceABCD = "abcd";
                 var color, f, p, n, vertexIndex;
-
                 for( i = 0; i < smooth_geom.faces.length; i++ )
                 {
                     f  = smooth_geom.faces[ i ];
                     n = ( f instanceof THREE.Face3 ) ? 3 : 4;
-
                     for( var j = 0; j < n; j++ )
                     {
                         vertexIndex = f[ faceABCD.charAt( j ) ];
-
                         p = smooth_geom.vertices[ vertexIndex ];
-
                         color = new THREE.Color( 0xffffff );
                         color.setHSL( ( p.y ) / 200 + 0.5, 1.0, 0.5 );
-
                         f.vertexColors[ j ] = color;
                     }
                 }
-
                 group = new THREE.Group();
                 scene.add( group );
-
                 // Mesh for the original model
                 var display_orig_mesh = false;
                 if( display_orig_mesh )
@@ -366,21 +321,17 @@
                     var orig_mesh = new THREE.Mesh( orig_geom, orig_material );
                     group.add( orig_mesh );
                 }
-
                 // Mesh for the smooth model
                 var smooth_materials = [
                     new THREE.MeshPhongMaterial( { color: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors, shininess: 0 } ),
                     new THREE.MeshBasicMaterial( { color: 0x405040, wireframe: true, opacity: 0.8, transparent: true } )
                 ];
                 smooth_mesh = THREE.SceneUtils.createMultiMaterialObject( smooth_geom, smooth_materials );
-
                 model_scale = model.meshScale ? model.meshScale : 1;
                 smooth_mesh.scale.x = model_scale;
                 smooth_mesh.scale.y = model_scale;
                 smooth_mesh.scale.z = model_scale;
-
                 scene.add( smooth_mesh );
-
                 group.scale.copy( smooth_mesh.scale );
                 
                 // Store the vert positions of the smooth model. Empty the storage first.
@@ -439,7 +390,6 @@
                 
                 addCtrlPtMeshes();
                 addLatticeLines();
-
                 deform();
             }
             
