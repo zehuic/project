@@ -101,8 +101,8 @@
                 updateUserOptions()
             });
 		var loader_walt = new THREE.JSONLoader();
-            loader_walt.load( 'threejs/tongue.js', function ( geometry ) {
-                modelLibrary.push({type: 'Tongue', args: [ ], scale: 100000, meshScale:50000});
+            loader_walt.load( 'threejs/Tongue1.js', function ( geometry ) {
+                modelLibrary.push({type: 'Tongue', args: [ ], meshScale:50});
                 THREE.Tongue = function() {
                     return geometry.clone();
                 };
@@ -288,6 +288,7 @@
                 // Scale geometry.
                 if( model.scale )
                     orig_geom.scale( model.scale, model.scale, model.scale );
+		orig_geom.translate(0,0,0);
                 // Cloning original geometry for debuging
                 smooth_geom = orig_geom.clone();
                 // Merge duplicate vertices.
