@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>DeformIt! by Glenn Chun</title>
+        <title>CSI4900 Project</title>
         <meta charset="utf-8">
         <meta name="description" content="Free-form deformation on the top of the webgl_modifier_subdivision example in threejs.org">
         <meta name="keywords" content="FFD,free-form,deformation,deform,lattice,cage,mesh,three,WebGL,JavaScript,3D,graphics,modeling,subdivision,surface">
@@ -101,7 +101,7 @@
                 updateUserOptions()
             });
 		var loader_walt = new THREE.JSONLoader();
-            loader_walt.load( 'threejs/tongue4.js', function ( geometry ) {
+            loader_walt.load( 'threejs/tongue5.js', function ( geometry ) {
                 modelLibrary.push({type: 'Tongue', args: [ ], meshScale:50});
                 THREE.Tongue = function() {
                     return geometry.clone();
