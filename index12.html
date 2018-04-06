@@ -101,15 +101,11 @@
                 updateUserOptions()
             });
 		var objLoader = new THREE.OBJLoader();
-		var material = new THREE.MeshBasicMaterial({color: 'yellow', side: THREE.DoubleSide});
-		objLoader.load('threejs/tongue.obj', function (obj) {
-			obj.traverse(function (child) {
-				if (child instanceof THREE.Mesh) {
-					child.material = material;
-				}
-			});
+		window.geo;
+		objLoader.load('threejs/tongue.obj', function (object) {
+			window.geo = object;
 			modelLibrary.push({type: 'Tongue', args: [ ], scale: 100, meshScale:1.5 });
-			THREE.Tongue = function() {return obj.clone();}
+			THREE.Tongue = function() {return window.geo.clone();}
 			updateUserOptions();
 		});
 	    /*var loader_walt = new THREE.JSONLoader();
