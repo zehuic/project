@@ -102,7 +102,7 @@
             });
 	    var loader_tongue = new THREE.JSONLoader();
             loader_tongue.load( 'threejs/tongue.js', function ( geometry ) {
-                modelLibrary.push({type: 'Tongue', args: [ ], meshScale: 400 });
+                modelLibrary.push({type: 'Tongue', args: [ ], meshScale: 40 });
                 THREE.Tongue = function() {
                     return geometry.clone();
                 };
