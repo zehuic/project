@@ -101,11 +101,9 @@
                 updateUserOptions()
             });
 		var objLoader = new THREE.OBJLoader();
-		window.geo;
 		objLoader.load('threejs/tongue.obj', function (object) {
-			window.geo = object;
 			modelLibrary.push({type: 'Tongue', args: [ ], scale: 100, meshScale:1.5 });
-			THREE.Tongue = function() {return window.geo.clone();}
+			THREE.Tongue = function() {return object.clone();}
 			updateUserOptions();
 		});
 	    /*var loader_walt = new THREE.JSONLoader();
