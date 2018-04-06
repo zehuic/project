@@ -100,13 +100,13 @@
                 };
                 updateUserOptions()
             });
-	    var objLoader = new THREE.OBJLoader();
-	    objLoader.load('threejs/tongue.obj', function (geometry) {
-		 modelLibrary.push({type: 'Tongue', args: [ ], scale: 100, meshScale:1.5 });
+	    var loader_tongue = new THREE.OBJLoader();
+	    loader_tongue.load('threejs/tongue.obj', function ( geometry ) {
+		 modelLibrary.push({type: 'Tongue', args: [ ], meshScale: 5 });
 		 THREE.Tongue = function() {
 			 return geometry.clone();
 		 };
-		 updateUserOptions();
+		 updateUserOptions()
 	    });
 	    /*var loader_walt = new THREE.JSONLoader();
             loader_walt.load( 'threejs/tongue5.js', function ( geometry ) {
