@@ -108,6 +108,14 @@
                 };
                 updateUserOptions()
             });
+	    var loader_cat = new THREE.JSONLoader();
+            loader_tongue.load( 'threejs/cat.js', function ( geometry ) {
+                modelLibrary.push({type: 'Cat', args: [ ], meshScale: 2 });
+                THREE.Cat = function() {
+                    return geometry.clone();
+                };
+                updateUserOptions()
+            });
 	    
             // start scene
             init();
